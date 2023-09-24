@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34003.232
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppR", "AppR.csproj", "{D413E01D-ED51-47F1-8E7B-F78B79CCFDC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppR", "AppR.csproj", "{D413E01D-ED51-47F1-8E7B-F78B79CCFDC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQL", "SQL", "{7E40AFDD-0689-445F-894C-BD13EC0CEF10}"
+	ProjectSection(SolutionItems) = preProject
+		SqlQuery_1.sql = SqlQuery_1.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
