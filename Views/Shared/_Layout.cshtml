@@ -29,6 +29,14 @@
     <!-- Custom Theme Style -->
     <link href="~/Custom/build/css/custom.min.css" rel="stylesheet">
     <link href="~/Custom/build/css/custom.css" rel="stylesheet">
+
+        <!-- jQuery -->
+    <script src="~/Custom/vendors/jquery/dist/jquery.min.js"></script>
+
+@*    toastr*@
+    <link href="~/additional/toastr.css" rel="stylesheet" />
+    <script src="~/additional/toastr.js"></script>
+    <script src="~/js/toastr.js"></script>
 </head>
 <body class="nav-md">
     <div class="container body">
@@ -59,7 +67,7 @@
                                         <li><a href="index.html">User Maintenance</a></li>
                                         <li><a href="index.html">View All Users</a></li>
                                         <li><a href='@Url.Action("CreateNewuser", "Home")'>Create New User</a></li>
-                                        <li><a href="index.html">User Password Reset</a></li>
+                                        <li><a href='@Url.Action("ResetPassword", "Home")'>User Password Reset</a></li>
                                     </ul>
                                 </li>
                                 <li>
@@ -126,9 +134,26 @@
 						</div>
 					</div>
 					<div class="clearfix"></div>
-            @RenderBody()
-                </div>
-            </div>
+            
+    @*        main body card*@
+        <div class="row">
+	    <div class="col-md-12 col-sm-12 ">
+		    <div class="x_panel">
+			    <div class="x_title">
+				    <h2>@ViewBag.TitlePage</h2>
+				    <div class="clearfix"></div>
+			    </div>
+			    <div class="x_content">
+				    <br />
+				    <div id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                         @RenderBody()
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+    </div>
+</div>
             <!-- /page content -->
             <!-- footer content -->
             <footer>
@@ -141,8 +166,7 @@
         </div>
     </div>
  
-    <!-- jQuery -->
-    <script src="~/Custom/vendors/jquery/dist/jquery.min.js"></script>
+
     <!-- Bootstrap -->
     <script src="~/Custom/vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- FastClick -->

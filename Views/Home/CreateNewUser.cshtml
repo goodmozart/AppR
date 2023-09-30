@@ -9,77 +9,109 @@
 </head>
 
 
-
-<div class="row">
-	<div class="col-md-12 col-sm-12 ">
-		<div class="x_panel">
-			<div class="x_title">
-				<h2>Create New User</h2>
-				<div class="clearfix"></div>
-			</div>
-			<div class="x_content">
-				<br />
-				<form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
-					<div class="item form-group">
-						<label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">
-							User ID<span class="required">*</span>
-						</label>
-						<div class="col-md-6 col-sm-6 ">
-							<input type="text" id="first-name" required="required" class="form-control ">
-						</div>
-					</div>
-					<div class="item form-group">
-						<label class="col-form-label col-md-3 col-sm-3 label-align" for="last-name">
-							Employee Name<span class="required">*</span>
-						</label>
-						<div class="col-md-6 col-sm-6 ">
-							<input type="text" id="last-name" name="last-name" required="required" class="form-control">
-						</div>
-					</div>
-					<div class="item form-group">
-						<label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Email</label>
-						<div class="col-md-6 col-sm-6 ">
-							<input id="middle-name" class="form-control" type="email" name="middle-name">
-						</div>
-					</div>
-					<div class="item form-group">
-						<label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Mobile Number</label>
-						<div class="col-md-6 col-sm-6 ">
-							<input id="middle-name" class="form-control" type="email" name="middle-name">
-						</div>
-					</div>
-					<div class="item form-group">
-						<label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Group/Dept</label>
-						<div class="col-md-6 col-sm-6 ">
-							<select class="form-control">
-								<option slected></option>
-								<option>GTB-BizSol</option>
-							</select>
-						</div>
-					</div>
-					<div class="item form-group">
-						<label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Role</label>
-						<div class="col-md-6 col-sm-6 ">
-							<select class="form-control">
-								<option slected></option>
-								<option>Maker</option>
-							</select>
-						</div>
-					</div>
-
-					<div class="ln_solid"></div>
-					<div class="item form-group">
-						<div class="col-md-6 col-sm-6 offset-md-3">
-							<button class="btn btn-primary" type="button">Cancel</button>
-							<button type="submit" class="btn btn-success">Submit</button>
-						</div>
-					</div>
-
-				</form>
+<body>
+		<div class="item form-group">
+			<label class="col-form-label col-md-3 col-sm-3 label-align">
+				User ID
+			</label>
+			<div class="col-md-6 col-sm-6 ">
+				<input type="text" id="username" class="form-control">
 			</div>
 		</div>
-	</div>
-</div>
+		<div class="item form-group">
+			<label class="col-form-label col-md-3 col-sm-3 label-align">
+				Employee Name
+			</label>
+			<div class="col-md-6 col-sm-6 ">
+				<input type="text" id="employeename" class="form-control">
+			</div>
+		</div>
+		<div class="item form-group">
+			<label class="col-form-label col-md-3 col-sm-3 label-align">Email</label>
+			<div class="col-md-6 col-sm-6 ">
+				<input id="email" class="form-control" type="email">
+			</div>
+		</div>
+		<div class="item form-group">
+			<label class="col-form-label col-md-3 col-sm-3 label-align">Mobile Number</label>
+			<div class="col-md-6 col-sm-6 ">
+				<input id="mobileno" class="form-control" type="number">
+			</div>
+		</div>
+		<div class="item form-group">
+			<label class="col-form-label col-md-3 col-sm-3 label-align">Group/Dept</label>
+			<div class="col-md-6 col-sm-6 ">
+				<select class="form-control" id="groupdept">
+					<option slected></option>
+					<option>GTB-BizSol</option>
+				</select>
+			</div>
+		</div>
+		<div class="item form-group">
+			<label class="col-form-label col-md-3 col-sm-3 label-align">Role</label>
+			<div class="col-md-6 col-sm-6 ">
+				<select class="form-control" id="role">
+					<option slected></option>
+					<option>Maker</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="ln_solid"></div>
+		<div class="item form-group">
+			<div class="col-md-6 col-sm-6 offset-md-3">
+				<button type="submit" class="btn btn-primary btnSubmit">Submit</button>
+				<button class="btn btn-danger btnCancel" type="button">Cancel</button>
+			</div>
+		</div>
 
 
+
+<script>
+	 $('.btnSubmit').click (function (){
+        if ($('#username').val() == "" || $('#employeename').val() == "" || $('#email').val() == "" || $('#mobileno').val() == ""  || $('#groupdept').val() == ""
+		  || $('#role').val() == "")
+        {
+            ShowToastr("Incomplete Data", "Error");
+        }
+       else
+       {
+            Register();
+       }
+    })
+	 function Register(){
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Register", "Home")',
+            data: {
+                "Username": $('#username').val(),
+                "Password": "Pass1234.",
+				"EmployeeName": $('#employeename').val(),
+				"Email": $('#email').val(),
+				"Mobileno": $('#mobileno').val(),
+				"GrpDept": $('#groupdept').val(),
+				"Role": $('#role').val(),
+            },
+            success: function (response) {
+				if (response == "1")
+				{
+					 window.location.href = "@Url.Action("CreateNewUser", "Home")";
+					 //ShowToastr("User succesfully registered", "Success");
+				}
+				else
+				{
+					 ShowToastr("User Already Exists!", "Error");
+				}
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    }
+</script>
+
+
+</body>
