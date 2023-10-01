@@ -107,7 +107,7 @@
     $('#btnlogin').click (function (){
         if ($('#username').val() == "" || $('#password').val() == "")
         {
-            ShowToastr("Incomplete Data", "Error");
+            ShowToastrError("Incomplete Data", "Error");
         }
        else
        {
@@ -148,7 +148,7 @@
                 }
                 else
                 {
-                    ShowToastr("Invalid Password", "Error");
+                    ShowToastrError("Invalid Password", "Error");
                 }
             },
             failure: function (response) {

@@ -7,6 +7,9 @@ using System.Security.Cryptography;
 using System.Web.Helpers;
 using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Net.Mail;
+using System.Net;
+using System.Reflection;
 
 namespace AppR.Controllers
 {
@@ -52,7 +55,9 @@ namespace AppR.Controllers
 		public IActionResult Logout()
         {
             Response.Cookies.Delete("rcbctellerlessusername");
-            return RedirectToAction("Login");
+			Response.Cookies.Delete("rcbctellerlogin");
+			Response.Cookies.Delete("rcbctellername");
+			return RedirectToAction("Login");
         }
 
         public IActionResult Privacy()
@@ -116,7 +121,9 @@ namespace AppR.Controllers
             string HashedPass = ""; //read from database
             string PlainPass = Password;
             bool result;
-            UserModel _userModel = new UserModel();
+			string EmployeeName = "";
+			string LastLogin = DateTime.Now.ToString("dd MMMM yyyy hh:mm tt");
+			UserModel _userModel = new UserModel();
             using (SqlConnection con = new SqlConnection(GetConnectionString()))
             {
                 SqlCommand cmd = new SqlCommand("Select *from UsersInformation where UserId='"+ Username+"'", con);
@@ -126,7 +133,8 @@ namespace AppR.Controllers
                 {
                     salt = sdr["Salt"].ToString();
                     HashedPass = sdr["HashPassword"].ToString();
-                }
+					EmployeeName = Convert.ToString(sdr["EmployeeName"]);
+				}
                 con.Close();
                 PlainPass = PlainPass + salt; // append salt key
                 result = Crypto.VerifyHashedPassword(HashedPass, PlainPass); //verify password
@@ -135,7 +143,9 @@ namespace AppR.Controllers
             if (result == true)
             {
                 Response.Cookies.Append("rcbctellerlessusername", Username);
-            }
+				Response.Cookies.Append("rcbctellerlogin", LastLogin);
+				Response.Cookies.Append("rcbctellername", EmployeeName);
+			}
             return Json(result);
         }
 
@@ -175,5 +185,81 @@ namespace AppR.Controllers
             Trace.WriteLine(JsonConvert.SerializeObject(_userModel));
 			return Json(_userModel);
 		}
+
+        public JsonResult RegeneratePassword(string Username, string Password, string EmployeeName, string Email, string Mobileno,
+			string GrpDept, string Role)
+        {
+			var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789./<>";
+			var stringChars = new char[10];
+			var random = new Random();
+
+			for (int i = 0; i < stringChars.Length; i++)
+			{
+				Trace.WriteLine(i);
+				stringChars[i] = chars[random.Next(chars.Length)];
+			}
+			var finalString = new string(stringChars);
+
+			string Salt = Crypto.GenerateSalt();
+			string password = finalString + Salt;
+			string HashPassword = Crypto.HashPassword(password);
+
+			string bodyMsg = "<head>" +
+					   "<style>" +
+					   "body{" +
+						   "font-family: calibri;" +
+						   "}" +
+						"</style>" +
+					   "</head>" +
+					   "<body>" +
+						   "<p>Good Day!<br>" +
+							"<br>" +
+							"User ID: " + Username+ "<br>" +
+							"New Password: <font color=red>" + finalString + "</font> <br>" +
+							"<br>" +
+							"<font color=red>*Note: This is a system generated e-mail.Please do not reply.</font>" +
+							"</p>" +
+						 "</body>";
+
+			MailMessage mailMessage = new MailMessage();
+			mailMessage.From = new MailAddress("arlene@yuna.somee.com");
+			mailMessage.To.Add("arlene.lunar11@gmail.com");
+			mailMessage.Subject = "Subject";
+			mailMessage.Body = bodyMsg;
+			mailMessage.IsBodyHtml = true;
+
+			SmtpClient smtpClient = new SmtpClient();
+			smtpClient.Host = "smtp.yuna.somee.com";
+			smtpClient.Port = 26;
+			smtpClient.UseDefaultCredentials = false;
+			smtpClient.Credentials = new NetworkCredential("arlene@yuna.somee.com", "12345678");
+			smtpClient.EnableSsl = false;
+
+			try
+			{
+				smtpClient.Send(mailMessage);
+				Trace.WriteLine("Email Sent Successfully.");
+				//update password in Database
+				var sql = "Update UsersInformation set HashPassword=@HashPassword, Salt=@Salt where UserId='" + Username + "'";
+				using (var connection = new SqlConnection(GetConnectionString()))
+				{
+					using (var command = new SqlCommand(sql, connection))
+					{
+						command.Parameters.AddWithValue("@HashPassword", HashPassword);
+						command.Parameters.AddWithValue("@Salt", Salt);
+						// repeat for all variables....
+						connection.Open();
+						command.ExecuteNonQuery();
+					}
+					connection.Close();
+				}
+				return Json("sent");
+			}
+			catch (Exception ex)
+			{
+				Trace.WriteLine("Error: " + ex.Message);
+				return Json("fail");
+			}
+        }
 	}
 }

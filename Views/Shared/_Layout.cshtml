@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor context
+@{
+    var EmployeeName = context.HttpContext.Request.Cookies["rcbctellername"];
+    var LastLogin = context.HttpContext.Request.Cookies["rcbctellerlogin"];
+}
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -44,7 +51,7 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>RCBC DPU</span></a>
+                        <a href="index.html" class="site_title"><i class="fa fa-window-restore"></i> <span>RCBC DPU</span></a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -107,7 +114,7 @@
                             <li class="nav-item dropdown open" style="padding-left: 15px;">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
                                     @*<img src="images/img.jpg" alt="">*@
-                                    <label>Admin Admin</label>
+                                    <label>@EmployeeName</label>
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="javascript:;"> Profile</a>
@@ -130,7 +137,7 @@
 				<div class="">
 					<div class="page-title">
 						<div class="title_left">
-                            <h5>@ViewBag.Lastlogin</h5>
+                            <h5>Last login: @LastLogin</h5>
 						</div>
 					</div>
 					<div class="clearfix"></div>

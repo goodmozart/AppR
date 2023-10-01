@@ -72,7 +72,7 @@
         if ($('#username').val() == "" || $('#employeename').val() == "" || $('#email').val() == "" || $('#mobileno').val() == ""  || $('#groupdept').val() == ""
 		  || $('#role').val() == "")
         {
-            ShowToastr("Incomplete Data", "Error");
+            ShowToastrError("Incomplete Data", "Error");
         }
        else
        {
@@ -100,7 +100,7 @@
 				}
 				else
 				{
-					 ShowToastr("User Already Exists!", "Error");
+					 ShowToastrError("User Already Exists!", "Error");
 				}
             },
             failure: function (response) {
@@ -111,6 +111,7 @@
             }
         });
     }
+	
 </script>
 
 
