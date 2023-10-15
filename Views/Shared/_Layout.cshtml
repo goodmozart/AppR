@@ -36,6 +36,7 @@
     <!-- Custom Theme Style -->
     <link href="~/Custom/build/css/custom.min.css" rel="stylesheet">
     <link href="~/Custom/build/css/custom.css" rel="stylesheet">
+    <link href="~/custom/css/custom.css" rel="stylesheet" />
 
         <!-- jQuery -->
     <script src="~/Custom/vendors/jquery/dist/jquery.min.js"></script>
@@ -71,10 +72,25 @@
                                 <li>
                                     <a style="font-size: 15px;font-weight: bolder"> Maintenance<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="index.html">User Maintenance</a></li>
-                                        <li><a href="index.html">View All Users</a></li>
-                                        <li><a href='@Url.Action("CreateNewuser", "Home")'>Create New User</a></li>
-                                        <li><a href='@Url.Action("ResetPassword", "Home")'>User Password Reset</a></li>
+                                        <li>
+                                            <a>User Maintenance<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li class="sub_menu">
+                                                    <a href='@Url.Action("CreateNewuser", "Home")'>Create New User</a>
+                                                </li>
+                                                <li>
+                                                    <a href='@Url.Action("ResetPassword", "Home")'>User Password Reset</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a>SMS/Email Notification Maintenance<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li class="sub_menu">
+                                                    <a href='@Url.Action("EmailTemplate", "Maintenance")'>Email Notification Template</a>
+                                                </li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li>
@@ -147,7 +163,7 @@
 	    <div class="col-md-12 col-sm-12 ">
 		    <div class="x_panel">
 			    <div class="x_title">
-				    <h2>@ViewBag.TitlePage</h2>
+				    <h2 class="custombreadcrumb">@ViewBag.TitlePage</h2>
 				    <div class="clearfix"></div>
 			    </div>
 			    <div class="x_content">

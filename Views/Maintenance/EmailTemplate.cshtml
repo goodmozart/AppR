@@ -1,0 +1,145 @@
+﻿@{
+	ViewBag.TitlePage = "Email Notification Template";
+}
+<head>
+	<style>
+		#edit {
+			cursor: pointer;
+			
+		}
+		#edit:hover {
+			color:blue;
+		}
+
+	/*	#subject {
+			border-radius: 15px;
+		}*/
+
+	
+	</style>
+</head>
+
+<div class="item form-group">
+	<label class="col-form-label col-md-1 col-sm-1 label-align" style="text-align:left">Email Type</label>
+	<div class="col-md-4 col-sm-4 ">
+		<select class="form-control" id="emailtype">
+			<option slected>-select status-</option>
+			<option>Credit Notification</option>
+			<option>Deposit Notification</option>
+			<option>OTP Notification</option>
+		</select>
+	</div>
+	<div class="col-md-2 col-sm-2 ">
+		<i class="fa fa-pencil fa-2x" aria-hidden="true" id="edit" style="display:none"></i>
+	</div>
+</div>
+
+<div class="item form-group">
+	<div class="col-md-9 col-sm-9">
+		<input id="subject" class="form-control" type="text" disabled>
+	</div>
+</div>
+
+<div class="item form-group">
+	<div class="col-md-9 col-sm-9">
+		<textarea class="form-control" rows="10" id="content" disabled></textarea>
+	</div>
+</div>
+<div class="item form-group">
+	<div class="col-md-6 col-sm-6 offset-md-3" style="text-align:right">
+		<button type="submit" class="btn btn-primary btnSubmit" style="display:none">Submit</button>
+		<button class="btn btn-danger btnCancel" type="button" style="display:none">Cancel</button>
+	</div>
+</div>
+
+<script>
+	$('#emailtype').change(function () {
+		if ($('#emailtype').val() == 'select status-')
+		{
+			//skip
+			$('#edit').css({ 'display': 'none' });
+		}
+		else
+		{
+				$.ajax({
+				type: "POST",
+				url: '@Url.Action("BrowseEmailType", "Maintenance")',
+				data: {
+						"EmailType": $('#emailtype').val(),
+				},
+				success: function (response) {
+						console.log(JSON.stringify(response))
+						$('#subject').val(response.subject);
+						$('#content').val(response.content);
+						$('#edit').css({ 'display': 'inline' });
+						$("#subject").prop("disabled", true);
+						$("#content").prop("disabled", true);
+						$('.btnSubmit').css({ 'display': 'none' });
+						$('.btnCancel').css({ 'display': 'none' });
+						$('#edit').css({ 'display': 'inline' });
+				},
+				failure: function (response) {
+					alert(response.responseText);
+				},
+				error: function (response) {
+					alert(response.responseText);
+				}
+			});
+		}
+	})
+	$('#edit').click (function (){
+		$("#subject").prop("disabled", false)
+		$("#content").prop("disabled", false)
+		$('.btnSubmit').css({ 'display': 'inline' });
+		$('.btnCancel').css({ 'display': 'inline' });
+		$('#edit').css({ 'display': 'none' });
+	})
+	$('.btnSubmit').click (function (){
+		if ($('#subject').val() == "" || $('#content').val() == "") {
+			ShowToastrError("Incomplete Data", "Error");
+		}
+		else
+		{
+			$.ajax({
+				type: "POST",
+				url: '@Url.Action("UpdateEmailType", "Maintenance")',
+				data: {
+					"EmailType": $('#emailtype').val(),
+					"Subject": $('#subject').val(),
+					"Content": $('#content').val(),
+				},
+				success: function (response) {
+					console.log(JSON.stringify(response))
+					if (response == "Success")
+					{
+						$("#subject").prop("disabled", true);
+						$("#content").prop("disabled", true);
+						$('.btnSubmit').css({ 'display': 'none' });
+						$('.btnCancel').css({ 'display': 'none' });
+						$('#edit').css({ 'display': 'inline' });
+						ShowToastrSuccess("New template updated successfully", "Success");
+					}
+					else
+					{
+						ShowToastrError(response, "Error");
+					}
+						
+				},
+				failure: function (response) {
+					alert(response.responseText);
+				},
+				error: function (response) {
+					alert(response.responseText);
+				}
+			});
+
+		}
+	})
+	$('.btnCancel').click (function (){
+		$("#subject").prop("disabled", true);
+		$("#content").prop("disabled", true);
+		$('.btnSubmit').css({ 'display': 'none' });
+		$('.btnCancel').css({ 'display': 'none' });
+		$('#edit').css({ 'display': 'inline' });
+	})
+</script>
